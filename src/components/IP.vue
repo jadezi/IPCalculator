@@ -38,11 +38,11 @@ export default {
     };
   },
   methods: {
-    _getSubNet(subNet) {
-      console.log(subNet);
-      var network = subNet.split(",");
-      console.log(network);
-      this._splitNetWork(network);
+    _getSubNet(network) {
+      // console.log(subNet);
+      var net = network.split(",");
+      console.log(net);
+      this._splitNetWork(net);
     },
     _splitNetWork(network) {
       var REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
@@ -53,13 +53,42 @@ export default {
         console.log(obj);
         arr.push({ net: obj[0], mask: obj[1] });
         res = REG.exec(obj[0]);
-        console.log(this._covertIp(res));
-        
+        this._convertMask(obj[1])
+        // res = REG.exec("192.168.1.0/24");
+        console.log(this._convertIp(res));
+        console.log(network);
+        console.log(res);
       }
 
       console.log(arr);
     },
-    _covertIp(ip) {
+    _convertMask(netMask) {
+      let mask = [];
+      let n = parseInt(netMask / 8);
+      let m = netMask % 8;
+      let t = "0b";
+      for (let i = 0; i < n; i++) {
+        mask.push(0b11111111);
+      }
+      if (m == 0) {
+        for (let k = 0; k < 4 - n; k++) {
+          mask.push(0);
+        }
+      } else {
+        for (let j = 0; j < m; j++) {
+          t += "1";
+        }
+        t = t << (8 - m);
+        mask.push(t);
+        if (n < 3) {
+          for (let k = 0; k < 3 - n; k++) {
+            mask.push(0);
+          }
+        }
+      }
+      return mask;
+    },
+    _convertIp(ip) {
       if (!ip) return -1;
       return (
         (parseInt(ip[1]) << 24) |
