@@ -33,34 +33,40 @@ export default {
   data() {
     return {
       netWork: "",
-      subNet: "192.168.1.0/24,10.18.29.0/23",
+      subNet: "10.18.1.0/24,10.18.19.0/23",
       result: "",
     };
   },
   methods: {
+    // 获取子网 
+    // 求差价 let difference = Array.from(new Set(a.concat(b).filter(v => !aSet.has(v) || !bSet.has(v))))
     _getSubNet(network) {
-      // console.log(subNet);
       var net = network.split(",");
       console.log(net);
-      this._splitNetWork(net);
+      this._printSubNet(this._splitNetWork(net));
+    },
+    _printSubNet(subNetwork) {
+      for(let i=0;i<subNetwork.length;i++){
+        console.log(this._getBrocastAddr(subNetwork[i].net[3],subNetwork[i].mask))
+      }
     },
     _splitNetWork(network) {
-      var REG = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
       var arr = [];
-      var res;
       for (var i = 0; i < network.length; i++) {
-        var obj = network[i].split("/");
-        console.log(obj);
-        arr.push({ net: obj[0], mask: obj[1] });
-        res = REG.exec(obj[0]);
-        this._convertMask(obj[1])
-        // res = REG.exec("192.168.1.0/24");
-        console.log(this._convertIp(res));
-        console.log(network);
-        console.log(res);
+        var tmp = network[i].split("/");
+        var networkHost = tmp[0].split(".");
+        arr.push({
+          net: networkHost.map(Number),
+          // mask: this._convertMask(tmp[1]),
+          mask: tmp[1]
+        });
       }
-
-      console.log(arr);
+      console.log(arr[0])
+      return arr;
+    },
+    _getBrocastAddr(net, mask){
+      console.log(mask)
+      return (Math.pow(2, 32-mask)-1 + net)
     },
     _convertMask(netMask) {
       let mask = [];
@@ -87,15 +93,6 @@ export default {
         }
       }
       return mask;
-    },
-    _convertIp(ip) {
-      if (!ip) return -1;
-      return (
-        (parseInt(ip[1]) << 24) |
-        (parseInt(ip[2]) << 16) |
-        (parseInt(ip[3]) << 8) |
-        parseInt(ip[4])
-      );
     },
   },
 };
