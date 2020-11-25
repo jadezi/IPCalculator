@@ -67,33 +67,7 @@ export default {
     _getBrocastAddr(net, mask){
       console.log(mask)
       return (Math.pow(2, 32-mask)-1 + net)
-    },
-    _convertMask(netMask) {
-      let mask = [];
-      let n = parseInt(netMask / 8);
-      let m = netMask % 8;
-      let t = "0b";
-      for (let i = 0; i < n; i++) {
-        mask.push(0b11111111);
-      }
-      if (m == 0) {
-        for (let k = 0; k < 4 - n; k++) {
-          mask.push(0);
-        }
-      } else {
-        for (let j = 0; j < m; j++) {
-          t += "1";
-        }
-        t = t << (8 - m);
-        mask.push(t);
-        if (n < 3) {
-          for (let k = 0; k < 3 - n; k++) {
-            mask.push(0);
-          }
-        }
-      }
-      return mask;
-    },
+    }
   },
 };
 </script>
