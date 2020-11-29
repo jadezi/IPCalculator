@@ -48,27 +48,42 @@ export default {
     _printSubNet(subNetwork) {
       let group = []
       for(let i=0;i<subNetwork.length;i++){
-        group.push({tag:subNetwork[i].net[2]+"."+subNetwork[i].net[3],standard:subNetwork[i].net[2]+'.0',netAdd:subNetwork[i].net[3],broAdd:this._getBrocastAddr(subNetwork[i].net[3],subNetwork[i].mask)})
+        group.push({tag:subNetwork[i].net[2]+"."+subNetwork[i].net[3],standard:subNetwork[i].net[2]+'.0',})
       }
       console.log(group);
-      this._dffNetWork(group)
     },
-    _dffNetWork(netWorkGroup){
-      console.log('start');
-      console.log(netWorkGroup);
-      let resGroup = []
-      for(let i = 0;i<netWorkGroup.length;i++){
-        for(let j = 1;j<netWorkGroup.length;j++){
-          if(netWorkGroup[i].standard == netWorkGroup[j].standard){
-            resGroup.push(netWorkGroup[i])
-          }
-          if(j==netWorkGroup.length-1 && resGroup.length!=0){
-            resGroup.push(netWorkGroup[i])
-          }
+    jsonNode(){
+      let mask;
+      let subNet;
+      let children = []
+    },
+    _creatNetWorkNode(netWorkGroup){
+      let node = new this.jsonNode()
+      let r = []
+      for(let i = 25;i<31;i++){
+        for(let j = 0;j<Math.pow(2,i-24);j++){
+          
         }
-        netWorkGroup = netWorkGroup.filter(item=>{return item.standard != netWorkGroup[i].standard})
-        console.log(netWorkGroup);
       }
+    },
+    transData2Tree(a, idStr, pidStr) {
+      var r = []
+      var hash = {}
+      var len = a.length
+      for (var i = 0; i < len; i++) {
+        hash[a[i][idStr]] = a[i]
+      }
+      for (var j = 0; j < len; j++) {
+        var aVal = a[j]
+        var hashVP = hash[aVal[pidStr]]
+        if (hashVP) {
+          (!hashVP.children) && (hashVP.children = [])
+          hashVP.children.push(aVal)
+        } else {
+          r.push(aVal)
+        }
+      }
+      return r
     },
     _splitNetWork(network) {
       var arr = [];
